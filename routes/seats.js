@@ -5,7 +5,8 @@ let db = require('../db');
 db = db.seats;
 
 router.get('/', (req, res) => {
-  db.length === 0 ? res.status(400).json({message: 'Seats database is empty'}) : res.json(db);
+  // db.length === 0 ? res.status(200).json({message: 'Seats database is empty'}) :
+  res.json(db);
 });
 
 router.get('/random', (req, res) => {
@@ -41,6 +42,8 @@ router.put('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const {day, seat, client, email} = req.body;
+  const sameSeat = db.filter(element => element.seat == req.body.seat);
+  const sameDay = sameSeat.some(seat => seat.day == req.body.day);
   if (!day) {
     res.status(400).json({message: 'Missing: day'});
   } else if (!seat) {
@@ -49,6 +52,8 @@ router.post('/', (req, res) => {
     res.status(400).json({message: 'Missing: client'});
   } else if (!email) {
     res.status(400).json({message: 'Missing: email'});
+  } else if (sameDay) {
+    res.status(400).json({message: 'The slot is already taken...'});
   } else {
     db.push({...req.body, id: uniqid()});
     res.json({message: 'Added'});
