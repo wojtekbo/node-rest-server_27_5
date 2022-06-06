@@ -57,6 +57,7 @@ router.post('/', (req, res) => {
   } else {
     db.push({...req.body, id: uniqid()});
     res.json({message: 'Added'});
+    req.io.emit('seatsUpdated', db);
   }
 });
 
