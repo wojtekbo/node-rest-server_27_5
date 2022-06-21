@@ -3,8 +3,16 @@ import {Button, Form, FormGroup, Label, Input, Row, Col, Alert, Progress} from '
 
 import './OrderTicketForm.scss';
 import SeatChooser from './../SeatChooser/SeatChooserContainer';
+import {io} from 'socket.io-client';
 
 class OrderTicketForm extends React.Component {
+  componentDidMount() {
+    const {loadSeats} = this.props;
+    this.socket = io(process.env.NODE_ENV === 'production' ? process.env.PUBLIC_URL : 'localhost:8000', {cors: {origin: 'http://localhost8000'}});
+    this.socket.on('seatsUpdated', seats => {
+      loadSeats();
+    });
+  }
   state = {
     order: {
       client: '',
@@ -38,7 +46,7 @@ class OrderTicketForm extends React.Component {
 
   submitForm = async e => {
     const {order} = this.state;
-    const {addSeat} = this.props;
+    const {addSeat, loadSeats} = this.props;
 
     e.preventDefault();
 
@@ -53,6 +61,8 @@ class OrderTicketForm extends React.Component {
         },
         isError: false,
       });
+      loadSeats();
+      this.socket.emit('setOrdered');
     } else {
       this.setState({isError: true});
     }

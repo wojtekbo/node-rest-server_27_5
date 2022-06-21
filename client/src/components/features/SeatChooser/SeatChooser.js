@@ -17,7 +17,7 @@ class SeatChooser extends React.Component {
     });
 
     this.socket.on('seatsUpdated', seats => {
-      seatsUpdated(seats);
+      loadSeats();
     });
 
     this.socket.on('disconnect', () => console.log('server disconnected'));
