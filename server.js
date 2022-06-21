@@ -55,7 +55,9 @@ io.on('connection', socket => {
 });
 
 // connects our backend code with the database
-mongoose.connect('mongodb://localhost:27017/NewWaveDB', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://borek84:koWxmTiin6TA3iJBV@cluster0.xytziry.mongodb.net/?retryWrites=true&w=majority', {useNewUrlParser: true});
+// mongoose.connect('mongodb://localhost:27017/NewWaveDB', {useNewUrlParser: true});
+
 const db = mongoose.connection;
 
 db.once('open', () => {
