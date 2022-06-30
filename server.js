@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const socketIo = require('socket.io');
 const http = require('http');
+const helmet = require('helmet');
 const PORT = process.env.PORT || 8000;
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +20,8 @@ const testimonialsRouter = require('./routes/testimonials.routes');
 const concertsRouter = require('./routes/concerts.routes');
 const seatsRouter = require('./routes/seats.routes');
 const {SocketAddress} = require('net');
+
+app.use(helmet());
 
 app.use((req, res, next) => {
   req.io = io;
@@ -57,7 +60,7 @@ io.on('connection', socket => {
 const NODE_ENV = process.env.NODE_ENV;
 let dbUri = '';
 
-if (NODE_ENV === 'production') dbUri = 'mongodb+srv://borek84:koWxmTiin6TA3iJBV@cluster0.xytziry.mongodb.net/?retryWrites=true&w=majority';
+if (NODE_ENV === 'production') dbUri = `mongodb+srv://${process.env.DB_login}:${process.env.DB_password}@cluster0.xytziry.mongodb.net/?retryWrites=true&w=majority`;
 else if (NODE_ENV === 'test') dbUri = 'mongodb://localhost:27017/NewWaveDBtest';
 else dbUri = 'mongodb://localhost:27017/NewWaveDB';
 
